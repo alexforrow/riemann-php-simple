@@ -112,7 +112,7 @@ class Client
             $protocol = $this->defaultProtocol;
         }
 
-        // do we have already have a socket created?
+        // do we already have a socket created?
         if (isset($this->sockets[$protocol])) {
             return $this->sockets[$protocol];
         }
@@ -149,7 +149,7 @@ class Client
             return false;
         }
 
-        if ($protocol === 'tcp') {
+        if ('tcp' === $protocol) {
             // TCP requires the length to be sent first
             fwrite($socket, pack('N', $size));
         }

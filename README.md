@@ -31,6 +31,10 @@ ruby-1.9.3 :001 > r = Riemann::Client.new
 ruby-1.9.3 :003 > r['service =~ "php%"']
 ```
 
+## Dependencies
+
+https://github.com/drslump/Protobuf-PHP
+
 ## Acknowledgements
 
 https://github.com/schnipseljagd/riemann-php-client
