@@ -122,7 +122,7 @@ class Client
             $protocol = $this->defaultProtocol;
         }
 
-        // over a certain size we send TCP
+        // over a certain size we send using TCP regardless of protocol requested
         if ($size > 1024*4) {
             $protocol = 'tcp';
         }

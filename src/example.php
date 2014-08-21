@@ -13,7 +13,7 @@ $riemann = new Riemann\Client('localhost', 5555, 'process:super-app:');
 $riemann->send(array(
   'service' => 'test1',
   'state' => 'ok',
-  'tags2' => array('gauge', 'first'),
+  'tags' => array('gauge', 'first'),
   'description' => 'first test',
   'ttl' => 60,
   'metric' => mt_rand(0, 99),
