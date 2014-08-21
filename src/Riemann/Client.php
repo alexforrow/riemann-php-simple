@@ -11,6 +11,9 @@ class Client
     private $host;
     private $port;
 
+    // string to prefix to all service fields, to allow namespacing
+    private $servicePrefix;
+
     // events that have not been flushed
     private $events;
 
@@ -19,29 +22,34 @@ class Client
 
     // array of sockets indexed by protocol
     private $sockets;
+
+    // cache of my hostname
+    private $fqdn;
     
     /**
      * Configuration for sending to Riemann
      *
      * @param string $host           Riemann server host
      * @param integer $port          Riemann server port
+     * @param string $servicePrefix  String to prefix to all service fields, to allow namespacing
      * @param string $defaultProtcol Default protocol to use
      */
-    public function __construct($host = 'localhost', $port = 5555, $defaultProtocol = 'udp')
+    public function __construct($host = 'localhost', $port = 5555, $servicePrefix = '', $defaultProtocol = 'udp')
     {
         $this->host = $host;
         $this->port = $port;
-        $this->defaultProtocol = $defaultProtocol;
+        $this->servicePrefix = $servicePrefix;
+        $this->defaultProtocol = self::checkProtocol($defaultProtocol);
+        $this->fqdn = gethostname();
     }
 
     /**
      * Send event to Riemann
      *
-     * @param array/Event $event     Either a populated Event object, or array with known Riemann fields
-     * @param booelan $flush         Whether to automatically flush
-     * @param string $protocol       Which protocol to use if flushing. Usesd default if unspecified
+     * @param array/Event $event    Either a populated Event object, or array with known Riemann fields
+     * @param mixed $flush          Whether to automatically flush. Pass true or particular protocol as string
      */
-    public function send($event, $flush = true, $protocol = null)
+    public function send($event, $flush = true)
     {
         if (is_array($event)) {
             // build Event
@@ -51,7 +59,7 @@ class Client
             if (isset($eventArray['host'])) {
                 $event->host = $eventArray['host'];
             } else {
-                $event->host = php_uname('n');
+                $event->host = $this->fqdn;
             }
 
             if (isset($eventArray['service'])) {
@@ -85,37 +93,46 @@ class Client
             if (isset($eventArray['ttl'])) {
                 $event->ttl = (int)$eventArray['ttl'];
             }
-
         }
+
+        // add service prefix
+        $event->service = $this->servicePrefix . $event->service;
+
+        // tag the event with this client libary
+        $event->tags = array_merge($event->tags, array('riemann-php-simple'));
 
         // add to internal buffer
         $this->events[] = $event;
 
         if ($flush) {
-            $this->flush($protocol);
+            // unless protocol was explicitly specified, just pass null i.e. use default
+            $this->flush(is_string($flush) ? $flush : null);
         }
     }
 
     /**
      * Get a socket to use for sending to Riemann, given socket and payload size
      *
-     * @param string $requestedProtocl  Protocol we have been requested to use - either 'tcp' or 'udp'
+     * @param string $protocol          Protocol we have been requested to use - either 'tcp' or 'udp'
      * @param integer $size             Size in bytes of payload
      */
-    private function getSocket($requestedProtocol, $size) {
-        // Over a certain size we send TCP
+    private function getSocket(&$protocol, $size) {
+        // set default protocol if not given
+        if (is_null($protocol)) {
+            $protocol = $this->defaultProtocol;
+        }
+
+        // over a certain size we send TCP
         if ($size > 1024*4) {
             $protocol = 'tcp';
-        } elseif ($requestedProtocol) {
-            $protocol = $requestedProtocol;
-        } else {
-            $protocol = $this->defaultProtocol;
         }
 
         // do we already have a socket created?
         if (isset($this->sockets[$protocol])) {
             return $this->sockets[$protocol];
         }
+
+        self::checkProtocol($protocol);
 
         $socket = @fsockopen("{$protocol}://{$this->host}", $this->port, $errno, $errstr, 1);
         if (!$socket) {
@@ -157,5 +174,18 @@ class Client
         fwrite($socket, $data);      
 
         return true;
+    }
+
+    /**
+     * Check protocol is legal
+     *
+     * @param string $protocol      The protocol to check
+     * @return string               The protocol
+     */
+    private static function checkProtocol($protocol) {
+        if (!in_array($protocol, array('tcp', 'udp'))) {
+            throw new \Exception("Unknown protocol specified: $protocol");
+        }
+        return $protocol;
     }
 }
