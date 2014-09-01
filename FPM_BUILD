@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+	echo "Usage: $0 :version"
+	exit 1
+fi
+
+version=$1
+
+base_dir=`readlink -f \`dirname $0\``
+cd $base_dir
+
+# Move to tag
+git checkout $version || exit 1
+
+# Initialise package tree and copy in code
+rm -rf usr
+mkdir -p usr/share/php
+cp -rf src/Riemann usr/share/php
+
+# Fetch dep - this is nasty
+cd `mktemp -d`
+wget -O - https://github.com/drslump/Protobuf-PHP/archive/master.tar.gz | tar zxv Protobuf-PHP-master/library || exit 1
+mv Protobuf-PHP-master/library/DrSlump $base_dir/usr/share/php || exit 1
+date > $base_dir/usr/share/php/DrSlump/date_fetched
+
+cd $base_dir
+
+fpm -s dir -t rpm -n riemann-php-simple -a all --version $version --url https://github.com/alexforrow/riemann-php-simple --maintainer "Alex Forrow" --vendor "MediaSift Ltd" --description "Simple Riemann client for PHP" usr || exit 1
+
+rm -rf usr
+
+echo
+echo Remember to switch branch back
