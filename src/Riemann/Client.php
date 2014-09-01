@@ -70,7 +70,7 @@ class Client
                 $event->state = $eventArray['state'];
             }
 
-            $event->time = (new \DateTime())->getTimestamp();
+            $event->time = time();
 
             if (isset($eventArray['description'])) {
                 $event->description = $eventArray['description'];
