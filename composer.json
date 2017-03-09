@@ -1,0 +1,30 @@
+{
+    "name": "alexforrow/riemann-php-simple",
+    "description": "Simple Riemann PHP client",
+    "homepage": "https://github.com/alexforrow/riemann-php-simple",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Forrow",
+            "email": "alex.forrow@datasift.com"
+        }
+    ],
+    "require": {
+        "DrSlump/Protobuf-PHP": "*"
+    },
+    "require-dev": {
+    },
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:drslump/Protobuf-PHP"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "":"src/"
+        }
+    }
+}
