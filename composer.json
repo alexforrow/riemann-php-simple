@@ -15,11 +15,10 @@
     },
     "require-dev": {
     },
-    "minimum-stability": "dev",
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:drslump/Protobuf-PHP"
+            "url": "git@github.com:alexforrow/Protobuf-PHP"
         }
     ],
     "autoload": {

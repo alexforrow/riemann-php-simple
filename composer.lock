@@ -4,19 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d57e3d96fc38f4b927615762c39b3f3",
+    "content-hash": "2b162d5e9e9ff520810bda7eb71ab2e0",
     "packages": [
         {
             "name": "DrSlump/Protobuf-PHP",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/drslump/Protobuf-PHP.git",
+                "url": "https://github.com/alexforrow/Protobuf-PHP.git",
                 "reference": "2201961982bc531a9ab22fc8a150ba815e9b6ef0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drslump/Protobuf-PHP/zipball/2201961982bc531a9ab22fc8a150ba815e9b6ef0",
+                "url": "https://api.github.com/repos/alexforrow/Protobuf-PHP/zipball/2201961982bc531a9ab22fc8a150ba815e9b6ef0",
                 "reference": "2201961982bc531a9ab22fc8a150ba815e9b6ef0",
                 "shasum": ""
             },
@@ -56,15 +56,14 @@
                 "serializing"
             ],
             "support": {
-                "source": "https://github.com/drslump/Protobuf-PHP/tree/master",
-                "issues": "https://github.com/drslump/Protobuf-PHP/issues"
+                "source": "https://github.com/alexforrow/Protobuf-PHP/tree/0.1.0"
             },
-            "time": "2013-12-16 18:39:54"
+            "time": "2013-12-16T18:39:54+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
