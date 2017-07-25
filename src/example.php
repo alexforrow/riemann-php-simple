@@ -2,7 +2,7 @@
 error_reporting(-1);
 
 // replace with your autoloader
-require __DIR__ . '/../../ms-apre/src/main/APRE/bootstrap.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 date_default_timezone_set('UTC');
 
