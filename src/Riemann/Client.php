@@ -34,7 +34,7 @@ class Client
      * @param string $servicePrefix  String to prefix to all service fields, to allow namespacing
      * @param string $defaultProtcol Default protocol to use
      */
-    public function __construct($host = 'localhost', $port = 5555, $servicePrefix = '', $defaultProtocol = 'udp')
+    public function __construct($host = 'localhost', $port = 5555, $servicePrefix = '', $defaultProtocol = 'tcp')
     {
         $this->host = $host;
         $this->port = $port;
